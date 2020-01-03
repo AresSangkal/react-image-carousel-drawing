@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Image-areas</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/custom.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <script src="assets/js/jquery-1.11.1.js"></script>
+  <script src="assets/js/jquery.areaSelect.js"></script>
+
+  <img id="start" src="img/saber.jpg" style="display: none">
+
+  <div class="container-flex">
+    <div class="row">
+      <div class="col-md-9">
+        <!--Carousel Wrapper-->
+        <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel"
+          data-interval="false">
+          <!--Slides-->
+          <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+              <img id="first" class="d-block w-100" src="img/img (31).jpg" alt="First slide">
+            </div>
+            <div class="carousel-item">
+              <img class="d-block w-100" src="img/img (88).jpg" alt="Second slide">
+            </div>
+            <div class="carousel-item">
+              <img class="d-block w-100" src="img/img(121).jpg" alt="Third slide">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <ol>
+            <li data-target="#carousel-thumb" data-slide-to="0" class="active" tabindex="0">
+              <img src="img/img (31).jpg" width="200px">
+            </li>
+            <li data-target="#carousel-thumb" data-slide-to="1" tabindex="0">
+              <img src="img/img (88).jpg" width="200px">
+            </li>
+            <li data-target="#carousel-thumb" data-slide-to="2" tabindex="0">
+              <img src="img/img(121).jpg" width="200px">
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <h1>Please draw the rectangle in Image with mouse.</h1>
+        <p>If you want to save the coordinates of the rectangle , please <strong>replace</strong> under the thumbnails.
+        </p>
+        <div class="space"></div>
+        <!-- <button id="btn">Toggle</button>
+        <div class="alert alert-info fade out" id="bsalert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Info!</strong> This alert box could indicate a neutral informative or action
+        </div> -->
+        
+
+        <div>
+          When you replace the images, the coodinates of selected images will be <strong>automatically</strong> saved
+          into the localStorage with <strong>json</strong> format.
+        </div>
+      </div>
+    </div>
+
+    
+
+      
+
+    <!--/.Carousel Wrapper-->
+  </div>
+
+      
+
+
+
+
+  <script>
+    var img = document.querySelector("#first");
+
+    (function () {
+      var canvas = document.querySelector("#start");
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      var id = 0;
+
+      $('#start').load(function () {
+        var options = {
+          initAreas: []
+        };
+        $(this).areaSelect(options);
+      });
+
+      $('li').click(function () {
+        if (JSON.parse(JSON.stringify($('#start').areaSelect('get')).length) == 2) {
+          console.log("There is not the datum will be saved!");
+        }
+        else {
+          // save the json data into localstorage
+          // $("#btn").on("click", toggleAlert);
+          const jsonData = $('#start').areaSelect('get');
+          
+          id = id + 1;
+          var data = {};
+          // send request to write json into server with post 
+          $.ajax({
+            type: 'POST',
+            data: JSON.stringify({
+              data: jsonData,
+              id: id
+            }),
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '/endpoint',
+            success: function (res) {
+              console.log('SUCCESS WRITE IMTO JSON');
+              console.log(JSON.stringify(res));
+            }
+          });
+          // refresh the Canvas
+          $('#start').areaSelect('uninstall');
+          var options = {
+            initAreas: []
+          };
+          $('#start').areaSelect(options);
+        }
+      });
+    })();
+
+
+    // function toggleAlert(){
+    //       $(".alert").toggleClass('in out'); 
+    //       return false; // Keep close.bs.alert event from removing from DOM
+    //   }
+
+
+      
+    //   $('#bsalert').on('close.bs.alert', toggleAlert)
+  </script>
+
+</body>
+
+</html>

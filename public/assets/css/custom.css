@@ -1,0 +1,32 @@
+.container-flex{
+    padding: 4px;
+}
+
+ol{
+    display: inline-flex;
+    margin: auto;
+    list-style: none;
+    padding-top: 7px;
+}
+
+li{
+    margin: 10px;
+}
+
+li:hover{
+    opacity: 0.5;
+}
+
+li:focus{
+    border: solid #5690ff 8px;
+}
+
+.col-md-3{
+    text-align: center;
+    margin: auto;
+    padding-right: 40px;
+}
+
+.space{
+    height: 170px;
+}
